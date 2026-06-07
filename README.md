@@ -64,7 +64,7 @@ backend/
 
 ## Ideas for Future C# Backend Features
 
-### 1. 🔐 Auth & User Accounts (JWT)
+### 1. Auth & User Accounts (JWT)
 Replace localStorage favorites with real user accounts. Use `BCrypt.Net` for
 password hashing and `System.IdentityModel.Tokens.Jwt` for JWT tokens. Users
 can log in from any device and keep their saved destinations.
