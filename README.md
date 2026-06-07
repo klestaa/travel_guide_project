@@ -1,6 +1,6 @@
 # WorldExplorer — Refactored Project Structure
 
-## 📁 Frontend File Structure
+## Frontend File Structure
 
 ```
 travel_guide/
