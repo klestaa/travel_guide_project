@@ -18,7 +18,6 @@ public record TripCostEstimate(
 
 public class FlightService : IFlightService
 {
-    // In a real app, connect to Amadeus / Skyscanner API here
     private static readonly Dictionary<string, decimal> RegionFlightBase = new()
     {
         ["Europe"]   = 250,

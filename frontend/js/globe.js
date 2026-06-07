@@ -1,6 +1,3 @@
-// ============================================================
-// globe.js — Three.js interactive 3D globe
-// ============================================================
 
 function initializeGlobe() {
     const container = document.getElementById('globeContainer');
@@ -50,7 +47,6 @@ function initializeGlobe() {
     raycaster = new THREE.Raycaster();
     mouse = new THREE.Vector2();
 
-    // ── Mouse drag rotation ────────────────────────────────
     let mouseDown = false;
     let mouseX = 0;
     let mouseY = 0;
@@ -74,7 +70,6 @@ function initializeGlobe() {
 
     window.addEventListener('mouseup', () => { mouseDown = false; });
 
-    // ── Click on marker ────────────────────────────────────
     renderer.domElement.addEventListener('click', (event) => {
         const rect = renderer.domElement.getBoundingClientRect();
         mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
@@ -87,13 +82,11 @@ function initializeGlobe() {
         }
     });
 
-    // ── Scroll to zoom ─────────────────────────────────────
     let targetZoom = camera.position.z;
     window.addEventListener('wheel', (e) => {
         targetZoom = Math.max(2, Math.min(10, targetZoom + e.deltaY * 0.005));
     });
 
-    // ── Animate ────────────────────────────────────────────
     function animate() {
         animationId = requestAnimationFrame(animate);
         globeEarth.rotation.x += (targetRotationX - globeEarth.rotation.x) * 0.1;
@@ -105,7 +98,6 @@ function initializeGlobe() {
     }
     animate();
 
-    // ── Resize ─────────────────────────────────────────────
     window.addEventListener('resize', () => {
         const newWidth = container.clientWidth;
         const newHeight = container.clientHeight;

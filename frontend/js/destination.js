@@ -1,9 +1,4 @@
-// ============================================================
-// destination.js — Destination display, gallery, lightbox,
-//                  favorites, and plan-to-visit logic
-// ============================================================
 
-// ── Core Display ─────────────────────────────────────────────
 function selectAndDisplay(key) {
     document.getElementById('locationSelect').value = key;
     displayDestination(key);
@@ -126,7 +121,6 @@ function randomDestination() {
     selectAndDisplay(randomKey);
 }
 
-// ── Related Destinations ─────────────────────────────────────
 function populateRelatedDestinations(current) {
     const region = destinationsData[current].region;
     const related = Object.keys(destinationsData)
@@ -153,7 +147,6 @@ function populateRelatedDestinations(current) {
     });
 }
 
-// ── Gallery ──────────────────────────────────────────────────
 function nextImage() {
     if (!currentDestination) return;
     const images = destinationsData[currentDestination].images;
@@ -182,7 +175,6 @@ function updateGalleryImage() {
     });
 }
 
-// ── Lightbox ─────────────────────────────────────────────────
 function openLightbox() {
     document.getElementById('imageLightbox').classList.add('active');
     document.getElementById('lightboxImg').src = lightboxImages[currentGalleryIndex];
@@ -202,7 +194,6 @@ function prevImageLightbox() {
     document.getElementById('lightboxImg').src = lightboxImages[currentGalleryIndex];
 }
 
-// ── Info Helpers ─────────────────────────────────────────────
 function showFact() {
     if (!currentDestination) return;
     const destination = destinationsData[currentDestination];
@@ -259,7 +250,6 @@ function updateSelectedCountryInfo(destination) {
     }
 }
 
-// ── Favorites & Plan to Visit ────────────────────────────────
 function toggleFavorite() {
     if (!currentDestination) return;
     if (favorites.includes(currentDestination)) {

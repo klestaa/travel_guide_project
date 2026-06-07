@@ -4,7 +4,7 @@ using TravelGuide.Models;
 
 namespace TravelGuide.Services;
 
-// ── Destinations ──────────────────────────────────────────────
+// Destinations
 public interface IDestinationService
 {
     Task<List<Destination>> GetAllAsync();
@@ -35,7 +35,7 @@ public class DestinationService : IDestinationService
            .ToListAsync();
 }
 
-// ── Users ─────────────────────────────────────────────────────
+// Users
 public interface IUserService
 {
     Task<User?> GetByIdAsync(int id);
@@ -85,7 +85,7 @@ public class UserService : IUserService
         _db.Favorites.Where(f => f.UserId == userId).ToListAsync();
 }
 
-// ── Reviews ───────────────────────────────────────────────────
+// Reviews
 public interface IReviewService
 {
     Task<List<Review>> GetForDestinationAsync(int destinationId);

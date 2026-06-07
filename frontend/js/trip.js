@@ -1,8 +1,4 @@
-// ============================================================
-// trip.js — Trip cost calculator & destination autocomplete
-// ============================================================
 
-// ── Modal ─────────────────────────────────────────────────────
 function openTripCalculator() {
     document.getElementById('tripModal').classList.add('active');
 }
@@ -11,7 +7,7 @@ function closeTripCalculator() {
     document.getElementById('tripModal').classList.remove('active');
 }
 
-// ── Calculator ────────────────────────────────────────────────
+// Calculator 
 function calculateTrip() {
     const from   = document.getElementById('tripFrom').value;
     const city   = document.getElementById('tripCity').value;
@@ -25,7 +21,6 @@ function calculateTrip() {
         return;
     }
 
-    // Cost estimates (could be replaced by real API data from C# backend)
     const flightPerPerson = 200;
     const hotelPerNight   = 120;
     const dailyCost       = 50;
@@ -63,7 +58,6 @@ function calculateTrip() {
     `;
 }
 
-// ── Autocomplete ──────────────────────────────────────────────
 function setupAutocomplete(inputId, suggestionId) {
     const input = document.getElementById(inputId);
     const box   = document.getElementById(suggestionId);

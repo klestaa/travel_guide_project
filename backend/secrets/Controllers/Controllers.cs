@@ -3,7 +3,7 @@ using TravelGuide.Services;
 
 namespace TravelGuide.Controllers;
 
-// ── GET /api/weather/{city} ───────────────────────────────────
+// GET /api/weather/{city} 
 [ApiController]
 [Route("api/[controller]")]
 public class WeatherController : ControllerBase
@@ -19,7 +19,7 @@ public class WeatherController : ControllerBase
     }
 }
 
-// ── GET /api/destinations ─────────────────────────────────────
+// GET /api/destinations 
 [ApiController]
 [Route("api/[controller]")]
 public class DestinationsController : ControllerBase
@@ -45,7 +45,7 @@ public class DestinationsController : ControllerBase
     }
 }
 
-// ── POST /api/trip/estimate ───────────────────────────────────
+// POST /api/trip/estimate 
 [ApiController]
 [Route("api/[controller]")]
 public class TripController : ControllerBase
@@ -64,7 +64,7 @@ public class TripController : ControllerBase
     }
 }
 
-// ── GET+POST /api/users/{id}/favorites ───────────────────────
+//  GET+POST /api/users/{id}/favorites 
 [ApiController]
 [Route("api/users")]
 public class UsersController : ControllerBase
@@ -91,7 +91,7 @@ public class UsersController : ControllerBase
     }
 }
 
-// ── GET+POST /api/reviews/{destinationId} ────────────────────
+//  GET+POST /api/reviews/{destinationId} 
 [ApiController]
 [Route("api/[controller]")]
 public class ReviewsController : ControllerBase

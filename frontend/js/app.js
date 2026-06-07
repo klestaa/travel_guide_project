@@ -1,8 +1,4 @@
-// ============================================================
-// app.js — Global state, initialization, and app entry point
-// ============================================================
 
-// ── Global State ────────────────────────────────────────────
 let currentGalleryIndex = 0;
 let currentDestination = null;
 let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
@@ -16,7 +12,6 @@ let mouse = null;
 let animationId = null;
 let lightboxImages = [];
 
-// ── Boot ─────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', function () {
     applyTheme(currentTheme);
     initializeSelect();

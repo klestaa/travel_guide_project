@@ -1,6 +1,3 @@
-// ============================================================
-// quiz.js — Travel personality quiz feature
-// ============================================================
 
 const quizQuestions = [
     {
@@ -50,7 +47,6 @@ const quizQuestions = [
     }
 ];
 
-// ── Modal controls ────────────────────────────────────────────
 function setupQuizButton() {
     const quizBtn = document.getElementById('quizBtn');
     if (quizBtn) quizBtn.addEventListener('click', openQuizModal);
@@ -69,7 +65,6 @@ function closeQuizPopup() {
     document.getElementById('quizPopup').style.display = 'none';
 }
 
-// ── Quiz flow ─────────────────────────────────────────────────
 function startQuiz() {
     const container = document.getElementById('quizQuestions');
     container.innerHTML = '';

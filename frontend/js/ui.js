@@ -1,8 +1,4 @@
-// ============================================================
-// ui.js — Theme, navigation, tabs, search, and filters
-// ============================================================
 
-// ── Theme ────────────────────────────────────────────────────
 function setupThemeToggle() {
     const themeToggle = document.getElementById('themeToggle');
     themeToggle.addEventListener('click', () => {
@@ -26,7 +22,6 @@ function applyTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
 }
 
-// ── Navigation ───────────────────────────────────────────────
 function setupNavigation() {
     const hamburger = document.getElementById('hamburger');
     const navMenu = document.getElementById('navMenu');
@@ -35,7 +30,6 @@ function setupNavigation() {
     }
 }
 
-// ── Tabs ─────────────────────────────────────────────────────
 function switchTab(tabId) {
     document.querySelectorAll('.tab-content').forEach(tab => {
         tab.style.display = 'none';
@@ -54,7 +48,6 @@ function switchTab(tabId) {
     if (activeBtn) activeBtn.classList.add('active');
 }
 
-// ── Search ───────────────────────────────────────────────────
 function performSearch() {
     const searchTerm = document.getElementById('searchInput').value.toLowerCase();
     if (!searchTerm) return;
@@ -69,19 +62,16 @@ function performSearch() {
     alert('No destination found!');
 }
 
-// ── Dropdown select ──────────────────────────────────────────
 function initializeSelect() {
     const select = document.getElementById('locationSelect');
     select.addEventListener('change', function () {
         if (this.value) selectAndDisplay(this.value);
     });
-    // Allow re-selecting the same option
     select.addEventListener('click', function () {
         this.selectedIndex = -1;
     });
 }
 
-// ── Activity / Budget / Climate Filters ──────────────────────
 function populateActivityFilters() {
     const activities = ['Museums', 'Beaches', 'Hiking', 'Food', 'Culture', 'Adventure', 'Shopping'];
     const container = document.getElementById('activityFilters');
@@ -131,7 +121,6 @@ function filterByClimate(climate) {
     }
 }
 
-// ── Facts Ticker ─────────────────────────────────────────────
 function startFactsTicker() {
     const allFacts = [];
     Object.values(destinationsData).forEach(dest => allFacts.push(...dest.facts));
@@ -145,7 +134,6 @@ function startFactsTicker() {
     setInterval(showRandomFact, 8000);
 }
 
-// ── Featured Destinations Grid ───────────────────────────────
 function populateFeaturedDestinations() {
     const featured = ['paris', 'tokyo', 'sydney', 'bali', 'newyork', 'rio'];
     const grid = document.getElementById('featuredGrid');

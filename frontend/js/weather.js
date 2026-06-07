@@ -1,10 +1,3 @@
-// ============================================================
-// weather.js — Live weather badges via OpenWeatherMap API
-// Note: move the API key to your C# backend to keep it secret
-// ============================================================
-
-const WEATHER_API_KEY = '9518812adb4b16a1dcae480a48642706';
-
 async function updateWeather() {
     const badges = document.querySelectorAll('.weather-badge');
 
@@ -13,18 +6,12 @@ async function updateWeather() {
         if (!city) return;
 
         try {
-            const res = await fetch(
-                `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${WEATHER_API_KEY}`
-            );
+            const res = await fetch(`http://localhost:5185/api/weather/${city}`);
             const data = await res.json();
+            if (!data) return;
 
-            if (!data.main) {
-                badge.style.display = 'none';
-                return;
-            }
-
-            badge.querySelector('.temp').textContent      = Math.round(data.main.temp) + '°C';
-            badge.querySelector('.condition').textContent  = data.weather[0].main;
+            badge.querySelector('.temp').textContent = Math.round(data.tempC) + '°C';
+            badge.querySelector('.condition').textContent = data.condition;
 
         } catch (err) {
             badge.style.display = 'none';

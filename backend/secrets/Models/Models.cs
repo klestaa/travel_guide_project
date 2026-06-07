@@ -1,6 +1,6 @@
 namespace TravelGuide.Models;
 
-// ── Destination ──────────────────────────────────────────────
+//  Destination 
 public class Destination
 {
     public int    Id          { get; set; }
@@ -20,7 +20,7 @@ public class Destination
     public ICollection<Review>  Reviews  { get; set; } = new List<Review>();
 }
 
-// ── User ─────────────────────────────────────────────────────
+// User 
 public class User
 {
     public int    Id           { get; set; }
@@ -34,7 +34,7 @@ public class User
     public ICollection<TripPlan> TripPlans { get; set; } = new List<TripPlan>();
 }
 
-// ── Favorite ─────────────────────────────────────────────────
+// Favorite 
 public class Favorite
 {
     public int    Id            { get; set; }
@@ -46,7 +46,7 @@ public class Favorite
     public User User { get; set; } = null!;
 }
 
-// ── Review ────────────────────────────────────────────────────
+// Review
 public class Review
 {
     public int     Id            { get; set; }
@@ -61,7 +61,7 @@ public class Review
     public User        User        { get; set; } = null!;
 }
 
-// ── TripPlan ─────────────────────────────────────────────────
+// TripPlan
 public class TripPlan
 {
     public int      Id             { get; set; }
