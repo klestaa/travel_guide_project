@@ -1,278 +1,126 @@
-# Global Travel Guide - Professional Edition
+# WorldExplorer — Refactored Project Structure
 
-## Issues Fixed
+## 📁 Frontend File Structure
 
-### Critical Fixes:
-1. **Corrupted Script File** - Removed duplicate/broken destination definitions at end of script.js
-2. **Duplicate HTML Tags** - Removed duplicate `<script>` tag that caused errors
-3. **CSS Duplicates** - Cleaned up duplicate CSS rules and syntax errors
-4. **JavaScript Errors** - Fixed `switchTab()` function reference to `event.target` 
-5. **Missing Event Listeners** - Added proper function initialization
+```
+travel_guide/
+├── index.html                  ← Updated HTML (loads modular scripts)
+├── css/
+│   └── style.css               ← All styles (unchanged)
+└── js/
+    ├── data.js                 ← All destination objects (the database)
+    ├── weather.js              ← OpenWeatherMap fetch logic
+    ├── globe.js                ← Three.js 3D globe + markers
+    ├── ui.js                   ← Theme, nav, tabs, filters, ticker
+    ├── destination.js          ← Display, gallery, lightbox, favorites
+    ├── quiz.js                 ← Travel personality quiz
+    ├── trip.js                 ← Trip cost calculator + autocomplete
+    └── app.js                  ← Global state, DOMContentLoaded boot
+```
 
-### Performance Improvements:
-- Optimized CSS selectors
-- Fixed theme toggling
-- Improved localStorage persistence
-- Enhanced animation performance
-
----
-
-##  New Features Added
-
-### 1. Country Flags 
-- Added emoji flags for all 26 destinations
-- Visual identification of countries
-- Better international feel
-
-### 2. Planning System
-- **Favorites**: Bookmark destinations to revisit later
-- **Plan to Visit**: Create a trip planning list separate from favorites
-- Persistent storage using localStorage
-- Both counts displayed in navigation badge
-
-### 3. Enhanced Favorites Modal
-- Combined Favorites & Trip Planning view
-- Quick action buttons for each destination
-- Visual distinction between favorites and planned trips
-- Enhanced with country flags and emojis
-
-### 4. Improved Information Display
-- Added emoji icons to all information fields
-- Better visual hierarchy with icons:
-  -  Languages
-  -  Currency
-  -  Timezone
-  -  Transport
-  -  Visa Info
-  -  Trip Duration
-  -  Safety Rating
-  -  Climate
-  -  Budget
-
-### 5. Featured Destinations Enhanced
-- Shows country flags
-- Budget preview
-- Better visual presentation
-
-### 6. Better Search & Filters
-- Search across multiple fields
-- Filter by Activity, Budget, Climate
-- Sort functions ready for expansion
-- Compatible with all 26 destinations
+### Load Order (important)
+Scripts are loaded in dependency order at the bottom of `index.html`:
+`data.js` → `weather.js` → `globe.js` → `ui.js` → `destination.js` → `quiz.js` → `trip.js` → `app.js`
 
 ---
 
-##  Features Overview
+## 📁 Backend File Structure (C# ASP.NET Core 8)
 
-### Core Experience:
--  **26 Worldwide Destinations** across 5 continents
--  **3D Interactive Globe** with zoom and rotation controls
--  **Image Gallery** with lightbox viewer for each destination
--  **1000+ Fun Facts** about destinations (auto-rotating ticker)
--  **Comprehensive Information**: Visa, currency, languages, timezone, transport, activities, accommodations, tips, safety ratings
-
-### User Interface:
--  **Dark/Light Mode** with persistent preference
--  **Responsive Design** - Mobile, Tablet, Desktop optimized
--  **Smooth Animations** & transitions throughout
-- **Tab System** - Overview, Details, Tips, Accommodations
-- **Related Destinations** - Discover similar places in your region
-
-### Organization:
-- **Favorites System** - Save destinations with ❤️
-- **Trip Planning** - Plan visits with 📅
-- **Activity Filters** - Find destinations by activity type
-- **Budget Filters** - Sort by price range
-- **Climate Filters** - Choose weather preference
-- **Advanced Search** - Search by name, country, description
-
-### Information Architecture:
-- **Travel Wisdom Section** - 6 essential travel tips categories
-- **Footer Navigation** - Quick links and social media
-- **Hamburger Menu** - Mobile-friendly navigation
-- **Badge System** - Key information at a glance
+```
+backend/
+├── TravelGuide.csproj
+├── Program.cs                          ← App entry, DI registration, middleware
+├── appsettings.json                    ← API keys, connection strings
+├── Data/
+│   └── AppDbContext.cs                 ← EF Core DbContext + model config
+├── Models/
+│   └── Models.cs                       ← Destination, User, Favorite, Review, TripPlan
+├── Services/
+│   ├── WeatherService.cs               ← Proxies OpenWeatherMap (keeps key server-side)
+│   ├── FlightService.cs                ← Trip cost estimation logic
+│   └── OtherServices.cs               ← DestinationService, UserService, ReviewService
+└── Controllers/
+    └── Controllers.cs                  ← All API endpoints
+```
 
 ---
 
-## How to Use
+## 🚀 Backend API Endpoints
 
-### Getting Started:
-1. **Open index.html** in any modern web browser
-2. **Select a destination** from the dropdown or use "Random"
-3. **Browse information** in the tabs (Overview, Details, Tips, Stay)
-4. **Add to Favorites** - Click the heart button 
-5. **Plan Visits** - Click the calendar button in favorites modal
-
-### Navigation:
-- **Search Bar** - Find destinations quickly
-- **Activity Filters** - Filter by type (Museums, Beaches, etc.)
-- **Budget Filters** - Find destinations in your price range
-- **Climate Filters** - Choose your weather preference
-- **3D Globe** - Explore destinations on interactive globe
-- **Theme Toggle** - Switch between dark/light mode
-
-### Favorites Management:
-- **Add to Favorites** - Click heart on destination page
-- **Open Favorites Modal** - Click heart in navigation bar
-- **Plan a Trip** - Click calendar button in favorites
-- **Remove** - Click trash button to remove from list
+| Method | Route | Description |
+|--------|-------|-------------|
+| GET | `/api/weather/{city}` | Live weather for any city |
+| GET | `/api/destinations` | All destinations (supports `?search=` and `?region=`) |
+| GET | `/api/destinations/{key}` | Single destination by key (e.g. `paris`) |
+| POST | `/api/trip/estimate` | Calculate trip cost estimate |
+| GET | `/api/users/{id}/favorites` | Get user's saved favorites |
+| POST | `/api/users/{id}/favorites/{key}` | Add a favorite |
+| DELETE | `/api/users/{id}/favorites/{key}` | Remove a favorite |
+| GET | `/api/reviews/{destinationId}` | All reviews for a destination |
+| GET | `/api/reviews/{destinationId}/rating` | Average rating |
+| POST | `/api/reviews/{destinationId}` | Submit a new review |
 
 ---
 
-## Design Features
+## 💡 Ideas for Future C# Backend Features
 
-### Color Scheme:
-- **Primary**: #2563eb (Blue)
-- **Secondary**: #f59e0b (Amber)
-- **Success**: #10b981 (Green)
-- **Danger**: #ef4444 (Red)
-- **Dark Mode**: Complete theme support
+### 1. 🔐 Auth & User Accounts (JWT)
+Replace localStorage favorites with real user accounts. Use `BCrypt.Net` for
+password hashing and `System.IdentityModel.Tokens.Jwt` for JWT tokens. Users
+can log in from any device and keep their saved destinations.
 
-### Responsive Breakpoints:
-- **Desktop**: Full experience (1200px+)
-- **Tablet**: Optimized layout (768px)
-- **Mobile**: Touch-friendly interface (480px)
+### 2. ✈️ Real Flight Prices (Amadeus API)
+Integrate the Amadeus `Flight Offers Search` API. Your C# backend acts as a
+proxy, so the Amadeus client secret never touches the browser. Return live
+prices for the trip calculator instead of estimates.
 
-### Animations:
-- Smooth page transitions
-- Hover effects on cards
-- Gallery image transitions
-- Auto-rotating facts ticker
-- Tab switching animations
+### 3. 🌤️ Weather Caching (IMemoryCache)
+The weather API is called every page load. Add `IMemoryCache` with a 30-minute
+TTL per city so you stay within the free tier and responses are instant.
 
----
+### 4. 📧 Trip Itinerary Emails (SendGrid / MailKit)
+After a user builds a trip plan, let them click "Email my itinerary". The C#
+backend renders an HTML email template with destination details, dates, and
+booking links and sends it via SendGrid or SMTP.
 
-## Destinations Included
+### 5. 📊 Analytics & Popularity Tracking
+Log destination view counts in a `DestinationStats` table. Expose a
+`GET /api/destinations/trending` endpoint that returns the top 10 most-viewed
+this week. Display a "Trending" badge in the frontend grid.
 
-### Europe (6)
-1. Paris, France 🇫🇷
-2. London, United Kingdom 🇬🇧
-3. Barcelona, Spain 🇪🇸
-4. Rome, Italy 🇮🇹
-5. Amsterdam, Netherlands 🇳🇱
-6. Geneva, Switzerland 🇨🇭
+### 6. 🗺️ Custom Itinerary Builder
+Let users create multi-day trip itineraries — pick destinations, assign days,
+add notes. Store in a `Itinerary` + `ItineraryStop` table. Expose CRUD
+endpoints and render the plan as a printable PDF using `QuestPDF`.
 
-### Asia (6)
-1. Tokyo, Japan 🇯🇵
-2. Bangkok, Thailand 🇹🇭
-3. Dubai, UAE 🇦🇪
-4. Singapore 🇸🇬
-5. Bali, Indonesia 🇮🇩
-6. Seoul, South Korea 🇰🇷
+### 7. 🔔 Price Drop Alerts (Background Service)
+Use `IHostedService` or Hangfire to run a nightly job that checks saved
+trip plans against current flight estimates. If the price drops by 20%+,
+send the user an email alert.
 
-### Americas (6)
-1. New York, USA 🇺🇸
-2. Las Vegas, USA 🇺🇸
-3. Toronto, Canada 🇨🇦
-4. Mexico City, Mexico 🇲🇽
-5. Machu Picchu, Peru 🇵🇪
-6. Rio de Janeiro, Brazil 🇧🇷
+### 8. 🌐 Currency Conversion (ExchangeRate API)
+Add a `GET /api/currency/{from}/{to}` endpoint that proxies a free exchange
+rate API. Show budget costs converted to the user's local currency in real time.
 
-### Africa & Middle East (5)
-1. Cairo, Egypt 🇪🇬
-2. Istanbul, Turkey 🇹🇷
-3. Cape Town, South Africa 🇿🇦
-4. Nairobi, Kenya 🇰🇪
-5. Marrakech, Morocco 🇲🇦
+### 9. 🏨 Hotel Availability (Booking.com Affiliate API)
+Rather than just linking to Booking.com, use their Affiliate API to embed
+live room counts and prices directly in the destination card.
 
-### Oceania (3)
-1. Sydney, Australia 🇦🇺
-2. Auckland, New Zealand 🇳🇿
-3. Fiji 🇫🇯
+### 10. 📷 Image CDN & Optimization
+Replace the current Unsplash URLs with images stored in Azure Blob Storage or
+Cloudflare R2. Add a `GET /api/images/{destinationKey}` endpoint that returns
+optimised WebP thumbnails, reducing page load time significantly.
 
 ---
 
-## Technical Details
+## 🛠️ Running the Backend
 
-### Technologies:
-- **HTML5** - Semantic markup
-- **CSS3** - Modern styling with CSS Grid & Flexbox
-- **JavaScript ES6+** - Modern vanilla JS (no frameworks)
-- **Three.js** - 3D globe visualization
-- **Font Awesome 6** - Icons
-- **Local Storage API** - Persistent user preferences
+```bash
+cd backend
+dotnet restore
+dotnet ef database update   # creates travel.db
+dotnet run                  # starts on https://localhost:7001
+# Swagger UI at https://localhost:7001/swagger
+```
 
-### Browser Compatibility:
-- Chrome/Edge (Latest)
-- Firefox (Latest)
-- Safari (Latest)
-- Mobile browsers (iOS Safari, Chrome Mobile)
-
-### Performance:
-- Lightweight (< 5MB including images from Unsplash)
-- Fast load times
-- Optimized animations
-- Smooth scrolling
-
----
-
-## Mobile Features
-
-- Touch-friendly navigation
-- Hamburger menu on mobile
-- Optimized image sizes
-- Responsive grid layouts
-- Easy tap targets for buttons
-- Swipe-friendly gallery
-
----
-
-## Highlights
-
-### For Users:
-- Professional, polished interface
-- Comprehensive travel information
-- Beautiful image galleries for each destination
-- Dark mode for comfortable browsing
-- Easy-to-use filters and search
-- Save favorites and plan trips
-- Learn fun facts about destinations
-
-### For Developers:
-- Clean, well-organized code
-- Modular JavaScript functions
-- CSS with variables for easy theming
-- No external dependencies (except Three.js for globe)
-- Easy to extend and customize
-- Good use of localStorage for persistence
-
----
-
-## Future Enhancement Ideas
-
-1. Backend integration for user accounts
-2. Real-time hotel/flight search
-3. Weather API integration
-4. Google Maps integration
-5. User reviews and ratings
-6. Community tips and recommendations
-7. Travel itinerary builder
-8. Packing list generator
-9. Currency converter
-10. Language translation
-
----
-
-## Version Info
-
-**Version**: 2.0 (Functional & Enhanced)
-**Last Updated**: April 2026
-**Status**: Fully Functional
-
-## What Was Fixed
-
-- ✅ Removed corrupted script duplicates
-- ✅ Fixed HTML structure issues
-- ✅ Cleaned up CSS duplicates
-- ✅ Fixed JavaScript event listeners
-- ✅ Added new features (flags, planning system)
-- ✅ Improved visual presentation
-- ✅ Enhanced user experience
-
----
-
-## Enjoy Your Travel Planning!
-
-Start exploring the world's most amazing destinations today!
-
-**Happy Travels!**
+Update `appsettings.json` with your real `OpenWeather:ApiKey` before running.

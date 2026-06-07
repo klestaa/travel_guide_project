@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Travel Guide - Explore the World</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+<body>
+
+<!-- Navigation -->
+<nav class="navbar">
+    <div class="nav-container">
+        <div class="logo">
+            <i class="fas fa-globe"></i> WorldExplorer
+        </div>
+        <ul class="nav-menu" id="navMenu">
+            <li><a href="#explore" class="nav-link active" id="exploreBtn">Explore</a></li>
+            <li><a href="#globe" class="nav-link">Around the Globe</a></li>
+            <li><a href="#destinations" class="nav-link">Destinations</a></li>
+            <li><a href="#tips" class="nav-link">Travel Tips</a></li>
+        </ul>
+        <div class="nav-icons">
+           
+            </button>
+            <button id="themeToggle" class="theme-toggle" title="Toggle Dark Mode">
+                <i class="fas fa-moon"></i>
+            </button>
+            <button id="favoritesBtn" class="favorites-btn" title="My Favorites & Plans">
+                <i class="fas fa-heart"></i>
+                <span id="favCount" class="fav-badge">0</span>
+            </button>
+<a href="#" class="nav-link planner-btn" onclick="openTripCalculator()">
+    Trip Planner
+</a>
+</li>
+            <button class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </div>
+</nav>
+
+<!-- Favorites Modal -->
+<div id="favoritesModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeFavoritesModal()">&times;</span>
+        <h2>My Favorite Destinations</h2>
+        <div id="favoritesList" class="favorites-list"></div>
+    </div>
+</div>
+
+<div id="tripModal" class="modal">
+  <div class="modal-content">
+
+    <span class="close" onclick="closeTripCalculator()">&times;</span>
+
+    <h2>Plan Your Trip</h2>
+
+   
+  <input id="tripFrom" placeholder="From..." autocomplete="off" />
+<div id="fromSuggestions" class="suggestions"></div>
+
+<input id="tripCity" placeholder="To..." autocomplete="off" />
+<div id="toSuggestions" class="suggestions"></div>
+
+    <input id="tripPeople" type="number" placeholder="Travelers" />
+    <input id="tripStart" type="date" />
+    <input id="tripEnd" type="date" />
+
+    <button onclick="calculateTrip()" class="trip-btn">
+  Calculate Trip
+</button>
+
+    <div id="tripResult"></div>
+
+  </div>
+</div>
+
+
+<!-- Travel Quiz Modal -->
+<div id="quizModal">
+    <div class="modal-content quiz-modal">
+        <span class="close" onclick="closeQuizModal()">&times;</span>
+        <h2>🧭 Travel Match Quiz</h2>
+        <p class="quiz-subtitle">Answer a few questions to find your perfect destination!</p>
+        <div id="quizContent">
+            <div id="quizQuestions"></div>
+            <button class="btn btn-primary" onclick="submitQuiz()" style="width: 100%; margin-top: 20px;">Find My Destination</button>
+        </div>
+        <div id="quizResult" style="display: none;">
+            <h3>🎉 Your Perfect Match!</h3>
+            <img id="resultImage" src="" alt="" style="width: 100%; height: 300px; border-radius: 10px; object-fit: cover; margin: 15px 0;">
+            <h4 id="resultTitle"></h4>
+            <p id="resultDescription"></p>
+            <button class="btn btn-primary" onclick="viewQuizResult()" style="width: 100%; margin-top: 15px;">Explore This Destination</button>
+            <button class="btn btn-secondary" onclick="startQuizAgain()" style="width: 100%; margin-top: 10px;">Take Quiz Again</button>
+        </div>
+    </div>
+</div>
+
+<!-- Lightbox for Images -->
+<div id="imageLightbox" class="lightbox">
+    <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+    <img class="lightbox-image" id="lightboxImg" src="" alt="">
+    <div class="lightbox-nav">
+        <button onclick="prevImageLightbox()" class="lightbox-btn">❮</button>
+        <button onclick="nextImageLightbox()" class="lightbox-btn">❯</button>
+    </div>
+</div>
+
+<!-- Hero Section -->
+<header class="hero">
+        <video autoplay muted loop playsinline class="hero-video">
+        <source src="videos/monaco.mp4.mp4" type="video/mp4">
+        <video controls class="hero-video"></video>
+    </video>
+
+    <div class="hero-content">
+        <h1>Explore The World</h1>
+        <p>Discover breathtaking destinations, hidden gems, and incredible experiences</p>
+        <div class="search-bar-container">
+            <input type="text" id="searchInput" class="search-bar" placeholder="Search destinations, activities, or regions...">
+            <button class="btn btn-primary" onclick="performSearch()">
+                <i class="fas fa-search"></i> Search
+            </button>
+        </div>
+    </div>
+</header>
+
+<!-- Controls Section -->
+<section class="controls-section" id="explore">
+    <div class="container">
+        <h2>Choose Your Adventure</h2>
+        
+        <!-- Filter Section -->
+        <div class="filters-section">
+            <div class="filter-group">
+                <label>🏷️ Filter by Activity:</label>
+                <div class="filter-buttons" id="activityFilters"></div>
+            </div>
+            <div class="filter-group">
+                <label>💰 Budget Range:</label>
+                <div class="filter-buttons">
+                    <button class="filter-btn" onclick="filterByBudget('all')">All Budgets</button>
+                    <button class="filter-btn" onclick="filterByBudget('budget')">Budget (&lt;$50)</button>
+                    <button class="filter-btn" onclick="filterByBudget('standard')">Standard ($50-150)</button>
+                    <button class="filter-btn" onclick="filterByBudget('luxury')">Luxury ($150+)</button>
+                </div>
+            </div>
+            <div class="filter-group">
+                <label>🌡️ Climate:</label>
+                <div class="filter-buttons">
+                    <button class="filter-btn" onclick="filterByClimate('all')">All Climates</button>
+                    <button class="filter-btn" onclick="filterByClimate('tropical')">Tropical</button>
+                    <button class="filter-btn" onclick="filterByClimate('temperate')">Temperate</button>
+                    <button class="filter-btn" onclick="filterByClimate('desert')">Desert</button>
+                    <button class="filter-btn" onclick="filterByClimate('alpine')">Alpine</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Destination Selector -->
+        <div class="controls-wrapper">
+            <select id="locationSelect" class="location-select">
+                <option value="">-- Select a destination --</option>
+                <optgroup label="EUROPE">
+                    <option value="paris">Paris, France</option>
+                    <option value="london">London, United Kingdom</option>
+                    <option value="barcelona">Barcelona, Spain</option>
+                    <option value="rome">Rome, Italy</option>
+                    <option value="amsterdam">Amsterdam, Netherlands</option>
+                    <option value="geneva">Geneva, Switzerland</option>
+                    <option value="prague">Prague, Czech Republic</option>
+                    <option value="lisbon">Lisbon, Portugal</option>
+                    <option value="reykjavik">Reykjavik, Iceland</option>
+                </optgroup>
+                <optgroup label="ASIA">
+                    <option value="tokyo">Tokyo, Japan</option>
+                    <option value="bangkok">Bangkok, Thailand</option>
+                    <option value="dubai">Dubai, UAE</option>
+                    <option value="singapore">Singapore</option>
+                    <option value="bali">Bali, Indonesia</option>
+                    <option value="seoul">Seoul, South Korea</option>
+                </optgroup>
+                <optgroup label="AMERICAS">
+                    <option value="newyork">New York, USA</option>
+                    <option value="lasvegas">Las Vegas, USA</option>
+                    <option value="toronto">Toronto, Canada</option>
+                    <option value="mexico">Mexico City, Mexico</option>
+                    <option value="machu">Machu Picchu, Peru</option>
+                    <option value="rio">Rio de Janeiro, Brazil</option>
+                    <option value="buenosaires">Buenos Aires, Argentina</option>
+                </optgroup>
+                <optgroup label="AFRICA & MIDDLE EAST">
+                    <option value="cairo">Cairo, Egypt</option>
+                    <option value="istanbul">Istanbul, Turkey</option>
+                    <option value="cape">Cape Town, South Africa</option>
+                    <option value="nairobi">Nairobi, Kenya</option>
+                    <option value="marrakech">Marrakech, Morocco</option>
+                </optgroup>
+                <optgroup label="OCEANIA">
+                    <option value="sydney">Sydney, Australia</option>
+                    <option value="newzealand">Auckland, New Zealand</option>
+                    <option value="fiji">Fiji</option>
+                </optgroup>
+            </select>
+            <button class="btn btn-primary" onclick="randomDestination()">
+                <i class="fas fa-dice"></i> Random Destination
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- Main Content Section -->
+<section id="content" class="content hidden">
+    <div class="container">
+        <div class="content-wrapper">
+            <!-- Gallery Section -->
+            <div class="gallery-section">
+                <div class="gallery-container">
+                    <img id="mainImage" class="gallery-image" src="" alt="" onclick="openLightbox()">
+                    <button class="gallery-btn prev" onclick="prevImage()">❮</button>
+                    <button class="gallery-btn next" onclick="nextImage()">❯</button>
+                    <span class="image-counter" id="imageCounter">1/3</span>
+                </div>
+                <div class="gallery-thumbnails" id="thumbnails"></div>
+            </div>
+
+            <!-- Info Section -->
+            <div class="info-section">
+                <div class="header-row">
+                    <div>
+                        <h2 id="title"></h2>
+                        <div class="destination-meta">
+                            <span class="country" id="country"></span>
+                            <span class="rating" id="rating"></span>
+                        </div>
+                    </div>
+                    <button id="addFavBtn" onclick="toggleFavorite()">
+                        <i class="far fa-heart"></i>
+                    </button>
+                </div>
+
+                <p id="description" class="description"></p>
+
+                <!-- Key Info Badges -->
+                <div class="info-badges">
+                    <div class="badge">
+                        <i class="fas fa-info-circle"></i>
+                        <span id="tripDuration"></span>
+                    </div>
+                    <div class="badge">
+                        <i class="fas fa-globe"></i>
+                        <span id="languages"></span>
+                    </div>
+                    <div class="badge">
+                        <i class="fas fa-money-bill"></i>
+                        <span id="currency"></span>
+                    </div>
+                    <div class="badge">
+                        <i class="fas fa-wallet"></i>
+                        <span id="budgetLevel"></span>
+                    </div>
+                    <div class="badge">
+                        <i class="fas fa-shield"></i>
+                        <span id="safety"></span>
+                    </div>
+                </div>
+
+                <!-- Quick Tabs -->
+                <div class="info-tabs">
+                    <button class="tab-btn active" onclick="switchTab('overview')">Overview</button>
+                    <button class="tab-btn" onclick="switchTab('details')">Details</button>
+                    <button class="tab-btn" onclick="switchTab('tips')">Travel Tips</button>
+                    <button class="tab-btn" onclick="switchTab('stay')">Where to Stay</button>
+                </div>
+
+                <!-- Overview Tab -->
+              <div id="overview-tab" class="tab-content active" style="display:block;">
+                    <!-- Did You Know? Section -->
+                    <div class="fact-box">
+                        <h3>Did You Know?</h3>
+                        <p id="fact" class="fact"></p>
+                        <button class="btn btn-secondary" onclick="showFact()">Show Another Fact</button>
+                    </div>
+
+                    <!-- Highlights -->
+                    <div class="highlights">
+                        <h3>Top Highlights</h3>
+                        <ul id="highlights" class="highlights-list"></ul>
+                    </div>
+                </div>
+
+                <!-- Details Tab -->
+              <div id="details-tab" class="tab-content" style="display:none;">
+                    <div class="details-grid">
+                        <div class="info-box">
+                            <h4>Best Time to Visit</h4>
+                            <p id="bestTime"></p>
+                        </div>
+                        <div class="info-box">
+                            <h4>Budget Guide</h4>
+                            <p id="budget"></p>
+                        </div>
+                        <div class="info-box">
+                            <h4>Getting There</h4>
+                            <p id="transport"></p>
+                        </div>
+                        <div class="info-box">
+                            <h4>Visa Information</h4>
+                            <p id="visa"></p>
+                        </div>
+                        <div class="info-box">
+                            <h4>Time Zone</h4>
+                            <p id="timezone"></p>
+                        </div>
+                        <div class="info-box">
+                            <h4>Activities Available</h4>
+                            <div id="activities" class="activities-list"></div>
+                        </div>
+                    </div>
+
+                    <div class="booking-panel">
+                        <h4>✈️ Travel Booking & Cost Guide</h4>
+                        <p id="bookingIntro">Search hotels, Airbnb stays, and flight deals for your selected destination.</p>
+                        <div class="booking-grid">
+                            <a id="hotelBookingLink" class="booking-card" target="_blank" rel="noopener">
+                                <i class="fas fa-hotel"></i>
+                                <span>Book Hotels</span>
+                            </a>
+                            <a id="airbnbBookingLink" class="booking-card" target="_blank" rel="noopener">
+                                <i class="fas fa-home"></i>
+                                <span>Search Airbnb</span>
+                            </a>
+                            <a id="flightBookingLink" class="booking-card" target="_blank" rel="noopener">
+                                <i class="fas fa-plane"></i>
+                                <span>Find Flights</span>
+                            </a>
+                        </div>
+                        <div class="airline-suggestions">
+                            <h4>Recommended Airlines</h4>
+                            <div id="airlineSuggestions" class="airline-list"></div>
+                        </div>
+                        <button class="btn btn-primary" onclick="togglePlanToVisit(currentDestination)">Add to Trip Plan</button>
+                    </div>
+                </div>
+
+                <!-- Travel Tips Tab -->
+              <div id="tips-tab" class="tab-content" style="display:none;">
+                    <div class="tips-box">
+                        <h3>Essential Travel Tips</h3>
+                        <div id="travelTips" class="tips-list"></div>
+                    </div>
+                </div>
+
+                <!-- Where to Stay Tab -->
+                <div id="stay-tab" class="tab-content">
+                    <div class="accommodation-box">
+                        <h3>Recommended Accommodations</h3>
+                        <div id="accommodations" class="accommodations-list"></div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</section>
+<section class="related-destinations">
+  <h3>Similar Destinations</h3>
+
+  <div class="carousel-wrapper">
+    <button class="carousel-btn prev">‹</button>
+    <div id="relatedDests"></div>
+    <button class="carousel-btn next">›</button>
+  </div>
+</section>
+<div class="related-card">
+    <div class="weather-badge" data-city="Nice">
+        <span class="temp">--°C</span>
+        <span class="condition">Loading...</span>
+        <button class="fav-btn" onclick="toggleFavorite(this)">
+            <i class="far fa-heart"></i>
+        </button>
+    </div>
+</div>
+
+<!-- Around The Globe Section -->
+<section class="globe-section" id="globe">
+    <div class="container">
+        <h2>Around The Globe</h2>
+        <p class="section-subtitle">Spin, zoom, and explore any destination on your interactive 3D globe</p>
+        <div class="globe-wrapper">
+            <div id="globeContainer" class="globe-container"></div>
+            <div class="globe-info">
+                <h3>Interactive Globe</h3>
+                <p><i class="fas fa-mouse"></i> Click and drag to spin</p>
+                <p><i class="fas fa-magnifying-glass"></i> Scroll to zoom in/out</p>
+                <p><i class="fas fa-location-dot"></i> Click countries to explore</p>
+                <div id="selectedCountry" class="selected-country"></div>
+                <div class="globe-stats">
+                    <div class="stat">
+                        <strong>26</strong><br>Destinations
+                    </div>
+                    <div class="stat">
+                        <strong>5</strong><br>Continents
+                    </div>
+                    <div class="stat">
+                        <strong>1000+</strong><br>Facts
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Destinations Section -->
+<section class="featured-section" id="destinations">
+    <div class="container">
+        <h2>Featured Destinations</h2>
+        <div class="featured-grid" id="featuredGrid"></div>
+    </div>
+</section>
+
+<!-- Travel Tips Section -->
+<section class="tips-section" id="tips">
+    <div class="container">
+        <h2>Travel Wisdom</h2>
+        <div class="wisdom-grid">
+            <div class="wisdom-card">
+                <i class="fas fa-shield"></i>
+                <h3>Safety First</h3>
+                <p>Always check government travel advisories before booking. Register with your embassy and keep emergency contacts handy.</p>
+            </div>
+            <div class="wisdom-card">
+                <i class="fas fa-passport"></i>
+                <h3>Documents</h3>
+                <p>Ensure your passport is valid for 6+ months. Check visa requirements early and keep digital/physical copies of documents.</p>
+            </div>
+            <div class="wisdom-card">
+                <i class="fas fa-credit-card"></i>
+                <h3>Money Matters</h3>
+                <p>Notify your bank before traveling. Use ATMs for local currency and always have backup payment methods.</p>
+            </div>
+            <div class="wisdom-card">
+                <i class="fas fa-backpack"></i>
+                <h3>Packing Smart</h3>
+                <p>Pack light with versatile clothing. Check weather forecasts and bring essentials like adapters and medications.</p>
+            </div>
+            <div class="wisdom-card">
+                <i class="fas fa-camera"></i>
+                <h3>Capture Moments</h3>
+                <p>Respect local customs when photographing. Ask permission and avoid sacred or sensitive areas for photography.</p>
+            </div>
+            <div class="wisdom-card">
+                <i class="fas fa-people"></i>
+                <h3>Cultural Respect</h3>
+                <p>Learn basic phrases in the local language. Respect traditions, dress codes, and customs of your destination.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Facts Ticker -->
+<section class="facts-ticker">
+    <div class="ticker-content">
+        <span class="ticker-label">Fun Fact:</span>
+        <span id="tickerFact" class="ticker-text"></span>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>About WorldExplorer</h4>
+                <p>Your ultimate guide to discovering and exploring the world's most incredible destinations.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#explore">Explore</a></li>
+                    <li><a href="#globe">Globe</a></li>
+                    <li><a href="#destinations">Destinations</a></li>
+                    <li><a href="#tips">Travel Tips</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Follow Us</h4>
+                <div class="social-links">
+                    <a href="#" title="Facebook"><i class="fab fa-facebook"></i></a>
+                    <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 WorldExplorer Travel Guide - Discover the beauty of our planet</p>
+        </div>
+    </div>
+</footer>
+<div id="quizPopup" class="quiz-popup">
+  <span>🌍 Take a quiz to find your perfect destination</span>
+  <button onclick="openQuizModal()">Take Quiz</button>
+  <span class="close-popup" onclick="closeQuizPopup()">✕</span>
+</div>
+
+<!-- App Scripts (order matters) -->
+<script src="js/data.js"></script>
+<script src="js/weather.js"></script>
+<script src="js/globe.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/destination.js"></script>
+<script src="js/quiz.js"></script>
+<script src="js/trip.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
